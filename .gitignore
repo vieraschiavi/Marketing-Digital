@@ -1,0 +1,11 @@
+node_modules/
+scripts/capturas/
+# Copias generadas por scripts/sincronizar.mjs (la fuente es app/ y core/)
+web/app/
+web/core/
+desktop/renderer/
+desktop/release/
+.DS_Store
+*.log
+.env
+.env.*

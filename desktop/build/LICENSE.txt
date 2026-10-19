@@ -1,0 +1,15 @@
+MV Marketing Digital — Licencia de uso
+© 2026 Martín Viera. Todos los derechos reservados.
+
+1. Este software se licencia, no se vende. La licencia permite instalarlo y
+   usarlo en los equipos de la organización que la adquirió.
+2. La demostración incluida trabaja con datos 100 % sintéticos. Las cifras de
+   impacto, proyecciones e ingresos estimados son ilustrativas y no constituyen
+   una promesa de resultados.
+3. Las claves de proveedores de IA que el usuario configure se guardan cifradas
+   en su equipo y se usan solo para las consultas que él realiza. El uso de cada
+   proveedor se rige por sus propios términos.
+4. Queda prohibido descompilar, redistribuir o sublicenciar el software sin
+   autorización escrita del titular.
+5. El software se entrega "tal cual", sin garantías de ningún tipo, en la
+   máxima medida permitida por la ley aplicable.

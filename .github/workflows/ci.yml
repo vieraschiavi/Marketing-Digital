@@ -1,0 +1,52 @@
+# © 2026 Martín Viera. Todos los derechos reservados.
+# CI: lint + tests del motor + E2E de la interfaz en Chromium. Corre en cada
+# push y PR. El instalador de Windows se arma aparte (build-windows.yml).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  calidad:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            desktop/package-lock.json
+      - name: Dependencias (raíz)
+        run: npm ci
+      - name: Dependencias del escritorio (sin bajar Electron)
+        run: npm ci --prefix desktop
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+      - name: Lint
+        run: npm run lint
+      - name: Tests del motor, la IA y el importador
+        run: npm test
+      - name: Chromium para el E2E
+        run: npx playwright install --with-deps chromium
+      - name: E2E de la interfaz (14 vistas × 3 idiomas + móvil)
+        run: npm run e2e
+      - name: Capturas del E2E
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas-e2e
+          path: scripts/capturas/*.png
+          retention-days: 14

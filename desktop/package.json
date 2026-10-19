@@ -1,0 +1,63 @@
+{
+  "name": "mv-marketing-digital-desktop",
+  "productName": "MV Marketing Digital",
+  "version": "1.0.0",
+  "description": "MV Marketing Digital — analítica de redes sociales propias y de competencia con asistente IA.",
+  "author": "Martín Viera",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.cjs",
+  "scripts": {
+    "sincronizar": "node ../scripts/sincronizar.mjs desktop",
+    "start": "npm run sincronizar && electron .",
+    "dist": "npm run sincronizar && electron-builder --win nsis --x64 --publish never",
+    "dist:dir": "npm run sincronizar && electron-builder --dir"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0"
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "uy.mv.marketingdigital",
+    "productName": "MV Marketing Digital",
+    "copyright": "© 2026 Martín Viera",
+    "directories": { "output": "release", "buildResources": "build" },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "ia-main.cjs",
+      "package.json",
+      "build/icon.png",
+      "renderer/**",
+      "node_modules/**",
+      "!node_modules/**/{CHANGELOG.md,README.md,readme.md,.bin,*.map,test,tests,__tests__,example,examples,docs}"
+    ],
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "useZip": true,
+      "differentialPackage": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "MV Marketing Digital",
+      "uninstallDisplayName": "MV Marketing Digital",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "installerLanguages": ["es_ES", "en_US", "pt_BR"],
+      "license": "build/LICENSE.txt",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "MV-Marketing-Digital-Setup.${ext}"
+    }
+  }
+}
