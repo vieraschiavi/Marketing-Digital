@@ -162,7 +162,9 @@ async function deslizar(page, destino, ms = 1200) {
 }
 
 async function ir(page, vista) {
-  await page.evaluate(() => window.scrollTo(0, 0));
+  // Se saca el rótulo anterior antes de cambiar de vista: si no, por unos
+  // cuadros se ve el título de la escena vieja sobre la pantalla nueva.
+  await page.evaluate(() => { document.getElementById("mv-rotulo")?.remove(); window.scrollTo(0, 0); });
   await page.click(`.lateral [data-accion="ir"][data-vista="${vista}"]`);
   await page.waitForTimeout(450);
 }
