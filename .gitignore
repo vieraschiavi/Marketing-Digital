@@ -9,3 +9,5 @@ desktop/release/
 *.log
 .env
 .env.*
+# Grabaciones crudas de scripts/grabar_video.mjs (solo se publican los mp4 finales)
+web/video/.crudo/
