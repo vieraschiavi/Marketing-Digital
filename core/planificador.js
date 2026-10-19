@@ -11,6 +11,7 @@
 
 import { REDES } from "./catalogo.js";
 import { mejoresHorarios } from "./metricas.js";
+import { aCsv } from "./exportar.js";
 
 /** Valida un borrador para una red. Devuelve errores (bloquean) y avisos. */
 export function validarPost(texto, red, opciones = {}) {
@@ -85,8 +86,6 @@ export function calendario(cola, refIso, modo = "semana") {
 
 /** Exporta la cola a CSV (para cargar en la herramienta de publicación). */
 export function colaACsv(cola) {
-  const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const filas = [["fecha", "red", "texto", "estado", "campana"].join(",")];
-  for (const x of cola) filas.push([x.fecha, x.red, x.texto, x.estado, x.campana || ""].map(esc).join(","));
-  return filas.join("\n");
+  // Misma protección que el resto de las exportaciones (fórmulas de Excel, BOM).
+  return aCsv(cola.map((x) => ({ fecha: x.fecha, red: x.red, texto: x.texto, estado: x.estado, campana: x.campana || "" })), ["fecha", "red", "texto", "estado", "campana"]);
 }

@@ -139,7 +139,10 @@ export function systemPrompt(idioma = "es") {
 
 /** Mensajes listos para el proveedor (formato neutro role/content). */
 export function armarMensajes(historial, pregunta, contexto) {
-  const hist = (historial || []).slice(-8).filter((m) => m.role === "user" || m.role === "assistant");
+  // Solo {role, content}: Anthropic/OpenAI rechazan campos extra (p. ej. `origen`).
+  const hist = (historial || []).slice(-8)
+    .filter((m) => (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+    .map((m) => ({ role: m.role, content: m.content }));
   return [...hist, { role: "user", content: `CONTEXTO:\n${JSON.stringify(contexto)}\n\nPREGUNTA:\n${pregunta}` }];
 }
 
@@ -157,7 +160,9 @@ const NUM = /(\d+(?:[.,]\d+)?)\s*%?/;
 export function whatIf(ds, pregunta, filtros = {}) {
   const t = pregunta.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   const propia = ds.marcas.find((m) => m.propia).id;
-  const red = Object.keys(REDES).find((r) => t.includes(r) || t.includes(REDES[r].nombre.toLowerCase())) || "instagram";
+  const palabra = (w) => new RegExp(`(^|[^a-z0-9])${w}([^a-z0-9]|$)`).test(t);
+  // Por palabra completa: "x" no tiene que encontrarse en "próximo" ni en "texto".
+  const red = Object.keys(REDES).find((r) => palabra(r) || palabra(REDES[r].nombre.toLowerCase())) || "instagram";
   const per = filtros.desde ? filtros : { ...filtros, ...ultimosDias(ds, 30) };
   const base = kpis(ds, { ...per, marcas: [propia], redes: [red] });
   const semanas = (Date.parse(per.hasta) - Date.parse(per.desde)) / (7 * 86400000) + 1 / 7;

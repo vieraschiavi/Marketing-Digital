@@ -15,6 +15,8 @@ function ficha(ctx, marca, redId) {
   const cpmUsuario = estado.ui.cpm?.[redId];
   const f = fichaCuenta(ds, marca, redId);
   if (!f) return panel(t("rank.ficha"), `<p class="muted">${esc(t("app.sinDatos"))}</p>`);
+  // Con menos de 14 días de serie no hay proyección: se muestra la ficha sin ella.
+  if (!f.proyeccion) return panel(t("rank.ficha"), `<p class="muted">${esc(t("rank.sinProyeccion"))}</p>`, { extra: `<button class="btn-ghost chico" data-accion="cerrarFicha">✕</button>` });
   const cpm = cpmUsuario || CPM_DEFECTO[redId];
   const ingresosMes = [f.ingresos.vistasMensuales / 1000 * cpm[0], f.ingresos.vistasMensuales / 1000 * cpm[1]];
   const hist = f.tabla.slice().reverse();

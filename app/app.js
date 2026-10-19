@@ -9,12 +9,13 @@
 import { generarDemo } from "../core/demo.js";
 import { IDS_REDES, REDES, GEO, EDADES, INTERESES, INDUSTRIAS, FORMATOS } from "../core/catalogo.js";
 import { campanasDemo } from "../core/campanas.js";
-import { recalcularPeriodo } from "../core/importar.js";
+import { mezclarImportados } from "../core/importar.js";
 import { generarSugerencias } from "../core/sugerencias.js";
 import { crearTraductor, IDIOMAS } from "../core/i18n.js";
 import { crearFormato } from "./formato.js";
 import { plataforma } from "./plataforma.js";
 import { esc } from "./graficos.js";
+import { hoyLocal } from "../core/fechas.js";
 import { VISTAS, ICONOS } from "./vistas/indice.js";
 
 const PERIODOS = [7, 30, 90, 180];
@@ -47,13 +48,14 @@ let fmt = crearFormato("es");
 let cacheSug = { clave: null, valor: [] };
 
 function construirDataset() {
-  const fin = new Date().toISOString().slice(0, 10);
+  const fin = hoyLocal();
   let ds = generarDemo({ semilla: estado.semilla, industria: estado.industria, paisBase: estado.paisBase, fin });
-  const imp = estado.importados;
-  if (imp.posts.length || imp.diario.length) {
-    const cuentas = [...ds.cuentas];
-    for (const c of imp.cuentas) if (!cuentas.some((x) => x.id === c.id)) cuentas.push(c);
-    ds = recalcularPeriodo({ ...ds, cuentas, posts: [...ds.posts, ...imp.posts], diario: [...ds.diario, ...imp.diario], meta: { ...ds.meta, importado: true } });
+  try {
+    ds = mezclarImportados(ds, estado.importados);
+  } catch (e) {
+    // Datos importados corruptos (versión vieja, archivo roto): la app arranca igual.
+    console.error("Importados descartados:", e);
+    estado.importados = { posts: [], diario: [], cuentas: [] };
   }
   ds.marcas = ds.marcas.map((m) => ({ ...m, nombre: estado.nombresMarcas[m.id] || m.nombre }));
   estado.ds = ds;
@@ -202,7 +204,7 @@ function render() {
     <header class="superior">
       <div><h1>${esc(t("nav." + estado.vista))}</h1>
       <p class="muted">${esc(ctx.propia.nombre)} · ${esc(estado.ds.meta.industriaNombre)} · ${esc(fmt.fecha(ctx.filtros.desde))} – ${esc(fmt.fecha(ctx.filtros.hasta))}
-      ${estado.ds.meta.sintetico ? `<span class="pill ambar" title="${esc(t("app.sinteticoTip"))}">${esc(t("app.sintetico"))}</span>` : ""}</p></div>
+      ${estado.ds.meta.importado ? `<span class="pill azul" title="${esc(t("app.mixtoTip"))}">${esc(t("app.mixto"))}</span>` : estado.ds.meta.sintetico ? `<span class="pill ambar" title="${esc(t("app.sinteticoTip"))}">${esc(t("app.sintetico"))}</span>` : ""}</p></div>
       <button class="btn-primario" data-accion="ir" data-vista="asistente">✦ ${esc(t("nav.asistente"))}</button>
     </header>
     ${vista.sinFiltros ? "" : barraFiltros()}
@@ -255,7 +257,7 @@ function despachar(tipo, ev) {
   const el = ev.target.closest(`[data-${atributo}]`);
   if (!el) return;
   const nombre = el.dataset[atributo];
-  const vista = VISTAS[estado.vista];
+  const vista = VISTAS[estado.vista] || VISTAS.resumen;
   const mapa = tipo === "click" ? { ...ACCIONES_GLOBALES, ...(vista.acciones || {}) } : { ...CAMBIOS_GLOBALES, ...(vista.cambios || {}) };
   const fn = mapa[nombre];
   if (!fn) return;
@@ -270,9 +272,13 @@ async function iniciar() {
   const guardado = await plataforma.leer("estado", null);
   if (guardado) for (const k of PERSISTIR) if (guardado[k] !== undefined) estado[k] = guardado[k];
   if (!INDUSTRIAS[estado.industria]) estado.industria = "cafeteria";
+  if (!GEO[estado.paisBase]) estado.paisBase = "UY";
   const param = new URLSearchParams(location.search);
   if (IDIOMAS.includes(param.get("lang"))) estado.idioma = param.get("lang");
   if (param.get("vista")) estado.vista = param.get("vista");
+  // Una vista desconocida (URL vieja, estado de otra versión) no puede romper los clics.
+  if (!Object.hasOwn(VISTAS, estado.vista)) estado.vista = "resumen";
+  if (!IDIOMAS.includes(estado.idioma)) estado.idioma = "es";
   t = crearTraductor(estado.idioma);
   fmt = crearFormato(estado.idioma);
   document.documentElement.lang = estado.idioma;
@@ -287,7 +293,7 @@ async function iniciar() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && e.target.matches("[data-enter]")) {
       e.preventDefault();
-      const fn = VISTAS[estado.vista].acciones?.[e.target.dataset.enter];
+      const fn = (VISTAS[estado.vista] || VISTAS.resumen).acciones?.[e.target.dataset.enter];
       if (fn) Promise.resolve(fn(contexto(), e.target, e)).catch((err) => toast(String(err.message || err), "error"));
     }
   });

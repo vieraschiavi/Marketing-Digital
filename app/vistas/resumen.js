@@ -7,6 +7,7 @@ import { benchmark } from "../../core/competencia.js";
 import { analizarMenciones } from "../../core/escucha.js";
 import { REDES } from "../../core/catalogo.js";
 import { lineas, barrasH, esc } from "../graficos.js";
+import { ahoraLocal } from "../../core/fechas.js";
 import { kpi, panel, tarjetaSugerencia, accionesSugerencia, marcasFiltro, red } from "./comun.js";
 
 export function render(ctx) {
@@ -20,7 +21,7 @@ export function render(ctx) {
   const bench = benchmark(ds, { ...filtros, marcas: null });
   const esc2 = analizarMenciones(ds, f);
   const sug = ctx.sugerencias().filter((s) => !ctx.estado.hechas[s.id]).slice(0, 4);
-  const proximos = ctx.estado.cola.filter((x) => x.fecha >= new Date().toISOString().slice(0, 16)).slice(0, 5);
+  const proximos = ctx.estado.cola.filter((x) => x.fecha >= ahoraLocal()).slice(0, 5);
 
   const tarjetas = [
     kpi(t("kpi.seguidores"), fmt.corto(k.seguidores), k.deltas.seguidores, { fmt, spark: seg.series.length ? seg.fechas.map((_, i) => seg.series.reduce((s, x) => s + x.valores[i], 0)) : null }),

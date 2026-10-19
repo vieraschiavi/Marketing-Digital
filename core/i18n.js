@@ -8,7 +8,7 @@
 export const IDIOMAS = ["es", "en", "pt"];
 
 const es = {
-  "app.sintetico": "Datos de demostración", "app.sinteticoTip": "Todo lo que ves son datos sintéticos generados con semilla fija. Importá tus CSV en Configuración para analizar datos reales.",
+  "app.sintetico": "Datos de demostración", "app.mixto": "Demo + datos importados", "app.mixtoTip": "Las cuentas importadas usan tus datos reales; el resto sigue siendo la demo sintética.", "app.sinteticoTip": "Todo lo que ves son datos sintéticos generados con semilla fija. Importá tus CSV en Configuración para analizar datos reales.",
   "app.tema": "Cambiar tema", "app.sinDatos": "Sin datos para estos filtros.", "app.errorVista": "Esta vista tuvo un error",
 
   "nav.resumen": "Resumen", "nav.redes": "Redes", "nav.competencia": "Competencia", "nav.rankings": "Rankings", "nav.escucha": "Escucha social",
@@ -68,7 +68,7 @@ const es = {
   "rank.proyNota": "Regresión log-lineal sobre los últimos 90 días con crecimiento amortiguado (τ = 180 días).",
   "rank.ingresos": "Ingresos estimados por vistas", "rank.mes": "mes", "rank.anio": "año",
   "rank.ingresosNota": "Estimación: {vistas} vistas mensuales × rango de CPM. Ajustá el CPM a tu mercado; no son ingresos reales.",
-  "rank.diario": "Estadísticas diarias (30 días)", "rank.ganancia": "Ganancia",
+  "rank.diario": "Estadísticas diarias (30 días)", "rank.sinProyeccion": "Esta cuenta tiene menos de 14 días de serie: no alcanza para proyectar.", "rank.ganancia": "Ganancia",
 
   "esc.menciones": "Menciones", "esc.neto": "Sentimiento neto", "esc.negativas": "Negativas", "esc.alcancePot": "Alcance potencial",
   "esc.netoAyuda": "(% positivas − % negativas), de −100 a +100.", "esc.alerta": "Pico de menciones negativas en {ciudad} sobre «{tema}» (z = {z}).",
@@ -206,7 +206,7 @@ const es = {
 };
 
 const en = {
-  "app.sintetico": "Demo data", "app.sinteticoTip": "Everything you see is synthetic data generated with a fixed seed. Import your CSV files in Settings to analyze real data.",
+  "app.sintetico": "Demo data", "app.mixto": "Demo + imported data", "app.mixtoTip": "Imported accounts use your real data; everything else is still the synthetic demo.", "app.sinteticoTip": "Everything you see is synthetic data generated with a fixed seed. Import your CSV files in Settings to analyze real data.",
   "app.tema": "Toggle theme", "app.sinDatos": "No data for these filters.", "app.errorVista": "This view hit an error",
 
   "nav.resumen": "Overview", "nav.redes": "Networks", "nav.competencia": "Competitors", "nav.rankings": "Rankings", "nav.escucha": "Social listening",
@@ -266,7 +266,7 @@ const en = {
   "rank.proyNota": "Log-linear regression over the last 90 days with damped growth (τ = 180 days).",
   "rank.ingresos": "Estimated earnings from views", "rank.mes": "month", "rank.anio": "year",
   "rank.ingresosNota": "Estimate: {vistas} monthly views × CPM range. Adjust the CPM to your market; these are not actual earnings.",
-  "rank.diario": "Daily statistics (30 days)", "rank.ganancia": "Gain",
+  "rank.diario": "Daily statistics (30 days)", "rank.sinProyeccion": "This account has under 14 days of history: not enough to project.", "rank.ganancia": "Gain",
 
   "esc.menciones": "Mentions", "esc.neto": "Net sentiment", "esc.negativas": "Negative", "esc.alcancePot": "Potential reach",
   "esc.netoAyuda": "(% positive − % negative), from −100 to +100.", "esc.alerta": "Spike of negative mentions in {ciudad} about “{tema}” (z = {z}).",
@@ -404,7 +404,7 @@ const en = {
 };
 
 const pt = {
-  "app.sintetico": "Dados de demonstração", "app.sinteticoTip": "Tudo o que você vê são dados sintéticos gerados com semente fixa. Importe seus CSV em Configurações para analisar dados reais.",
+  "app.sintetico": "Dados de demonstração", "app.mixto": "Demo + dados importados", "app.mixtoTip": "As contas importadas usam seus dados reais; o resto continua sendo a demo sintética.", "app.sinteticoTip": "Tudo o que você vê são dados sintéticos gerados com semente fixa. Importe seus CSV em Configurações para analisar dados reais.",
   "app.tema": "Alternar tema", "app.sinDatos": "Sem dados para estes filtros.", "app.errorVista": "Esta tela teve um erro",
 
   "nav.resumen": "Resumo", "nav.redes": "Redes", "nav.competencia": "Concorrência", "nav.rankings": "Rankings", "nav.escucha": "Escuta social",
@@ -464,7 +464,7 @@ const pt = {
   "rank.proyNota": "Regressão log-linear dos últimos 90 dias com crescimento amortecido (τ = 180 dias).",
   "rank.ingresos": "Receita estimada por visualizações", "rank.mes": "mês", "rank.anio": "ano",
   "rank.ingresosNota": "Estimativa: {vistas} visualizações mensais × faixa de CPM. Ajuste o CPM ao seu mercado; não é receita real.",
-  "rank.diario": "Estatísticas diárias (30 dias)", "rank.ganancia": "Ganho",
+  "rank.diario": "Estatísticas diárias (30 dias)", "rank.sinProyeccion": "Esta conta tem menos de 14 dias de série: não dá para projetar.", "rank.ganancia": "Ganho",
 
   "esc.menciones": "Menções", "esc.neto": "Sentimento líquido", "esc.negativas": "Negativas", "esc.alcancePot": "Alcance potencial",
   "esc.netoAyuda": "(% positivas − % negativas), de −100 a +100.", "esc.alerta": "Pico de menções negativas em {ciudad} sobre «{tema}» (z = {z}).",

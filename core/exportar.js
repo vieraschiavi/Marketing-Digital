@@ -16,8 +16,8 @@ export function aCsv(filas, columnas = null, sep = ",") {
   const esc = (v) => {
     const s = v == null ? "" : typeof v === "object" ? JSON.stringify(v) : String(v);
     // Evita inyección de fórmulas al abrir en Excel (=, +, -, @ al inicio).
-    const seguro = /^[=+\-@]/.test(s) && !/^-?\d+(\.\d+)?$/.test(s) ? "'" + s : s;
-    return /[",\n;]/.test(seguro) ? `"${seguro.replace(/"/g, '""')}"` : seguro;
+    const seguro = /^[=+\-@\t\r]/.test(s) && !/^-?\d+(\.\d+)?$/.test(s) ? "'" + s : s;
+    return /[",\n\r;]/.test(seguro) ? `"${seguro.replace(/"/g, '""')}"` : seguro;
   };
   return "\uFEFF" + [cols.join(sep), ...filas.map((f) => cols.map((c) => esc(f[c])).join(sep))].join("\n");
 }

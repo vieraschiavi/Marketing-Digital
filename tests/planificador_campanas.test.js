@@ -26,7 +26,9 @@ test("la cola es inmutable y se mantiene ordenada por fecha", () => {
   assert.equal(c3[0].estado, "publicado");
   assert.equal(quitarDeCola(c3, c3[0].id).length, 1);
   assert.throws(() => agregarACola(c0, { red: "x", texto: "a".repeat(400), fecha: "2026-10-20T10:00" }));
-  assert.match(colaACsv(c2), /^fecha,red,texto,estado,campana\n"2026-10-19T10:00","x","A"/);
+  assert.match(colaACsv(c2), /^\uFEFFfecha,red,texto,estado,campana\n2026-10-19T10:00,x,A,programado,/);
+  const peligrosa = agregarACola(c0, { red: "x", texto: "=HYPERLINK(1)", fecha: "2026-10-20T10:00" });
+  assert.match(colaACsv(peligrosa), /'=HYPERLINK/);
 });
 
 test("calendario semanal empieza el lunes; el mensual trae 6 semanas", () => {

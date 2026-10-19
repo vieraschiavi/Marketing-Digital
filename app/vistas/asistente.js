@@ -64,6 +64,7 @@ async function enviar(ctx, pregunta) {
   pregunta = (pregunta || "").trim();
   if (!pregunta || ctx.estado.ui.pensando) return;
   const { t, estado } = ctx;
+  const historial = estado.chat.slice(-8); // antes de agregar la pregunta: armarMensajes la suma
   const chat = [...estado.chat, { role: "user", content: pregunta }];
   ctx.actualizar({ chat, ui: { ...estado.ui, preguntaPendiente: "", pensando: true } });
   const ia = estado.ia || {};
@@ -71,7 +72,7 @@ async function enviar(ctx, pregunta) {
   let respuesta, origen;
   if (activo) {
     try {
-      const r = await ctx.plataforma.iaPreguntar({ proveedor: activo, idioma: estado.idioma, historial: estado.chat.slice(-8), pregunta, contexto: construirContexto(ctx.ds, ctx.filtros) });
+      const r = await ctx.plataforma.iaPreguntar({ proveedor: activo, idioma: estado.idioma, historial, pregunta, contexto: construirContexto(ctx.ds, ctx.filtros) });
       respuesta = r.texto;
       origen = `${PROVEEDORES[activo].nombre} · ${r.modelo}`;
     } catch (e) {

@@ -5,11 +5,10 @@
 import { validarPost, horariosSugeridos, proximaFecha, agregarACola, quitarDeCola, actualizarEnCola, calendario, colaACsv } from "../../core/planificador.js";
 import { REDES, IDS_REDES } from "../../core/catalogo.js";
 import { esc } from "../graficos.js";
+import { hoyLocal } from "../../core/fechas.js";
 import { panel, red } from "./comun.js";
 
-function hoyIso() {
-  return new Date().toISOString().slice(0, 10);
-}
+const hoyIso = () => hoyLocal();
 
 export function render(ctx) {
   const { ds, t, fmt, estado } = ctx;

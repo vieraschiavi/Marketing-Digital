@@ -11,7 +11,8 @@ const TIMEOUT_MS = 90000;
 
 // Modelos Claude con thinking adaptativo y esfuerzo (familias 4.6 en adelante).
 function capacidadesClaude(modelo) {
-  const m = /claude-(opus|sonnet|haiku|fable|mythos)-(\d+)(?:-(\d+))?/.exec(modelo) || [];
+  // Menor de 1–2 dígitos: en "claude-opus-4-20250514" el 20250514 es una fecha, no la versión.
+  const m = /claude-(opus|sonnet|haiku|fable|mythos)-(\d+)(?:-(\d{1,2}))?(?!\d)/.exec(modelo) || [];
   const mayor = Number(m[2] || 0), menor = Number(m[3] || 0);
   const moderno = mayor >= 5 || (mayor === 4 && menor >= 6 && m[1] !== "haiku");
   // Fallback de servidor ante rechazos: solo en estos modelos (Claude API).

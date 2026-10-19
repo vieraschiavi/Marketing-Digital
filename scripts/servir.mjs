@@ -4,7 +4,7 @@
 //   node scripts/servir.mjs [carpeta] [puerto]
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
-import { extname, join, normalize, resolve } from "node:path";
+import { extname, join, normalize, relative, resolve, isAbsolute } from "node:path";
 
 const TIPOS = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".mjs": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".mp4": "video/mp4", ".webm": "video/webm", ".json": "application/json", ".ico": "image/x-icon", ".vtt": "text/vtt" };
 
@@ -14,7 +14,8 @@ export function servir(raiz = ".", puerto = 8790) {
     try {
       const ruta = decodeURIComponent(new URL(req.url, "http://x").pathname);
       let archivo = normalize(join(base, ruta));
-      if (!archivo.startsWith(base)) { res.writeHead(403).end(); return; } // path traversal
+      const rel = relative(base, archivo);
+      if (rel.startsWith("..") || isAbsolute(rel)) { res.writeHead(403).end(); return; } // path traversal
       if ((await stat(archivo).catch(() => null))?.isDirectory()) archivo = join(archivo, "index.html");
       const datos = await readFile(archivo);
       res.writeHead(200, { "Content-Type": TIPOS[extname(archivo)] || "application/octet-stream", "Cache-Control": "no-store" });
